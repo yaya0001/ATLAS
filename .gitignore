@@ -1,2 +1,9 @@
 .env
+dist/
 build/
+out/
+.cache/
+*.log
+*.tmp
+*.bak
+__pycache__/**
