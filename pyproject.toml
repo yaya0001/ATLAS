@@ -1,0 +1,25 @@
+[project]
+name = "ATLAS"
+version = "0.1.0"
+description = "An autonomous research agent built from scratch"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "groq",
+    "pydantic",
+    "pydantic-settings",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "ruff",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
