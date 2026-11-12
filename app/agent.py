@@ -50,6 +50,7 @@ class Agent:
                 state.messages.append(
                     message.model_dump(exclude_none=True)
                 )
+                print("Number of tool calls:", len(message.tool_calls))
 
                 # 4. Execute the requested tools
                 tool_results = self.tool_handler.handle(
@@ -78,4 +79,6 @@ available_tools = [
     for function in tool_registry.get_all_tools()
 ]
 agent1=Agent(GroqLLM(), ToolCallHandler(tool_executor), available_tools, max_iterations=5)
-print(agent1.run("How many words are in this sentence: 'Agentic AI systems can use external tools'?"))
+print(agent1.run('''Use count_words and get_current_date together. 
+    Count the words in: 'Agentic AI systems can use external tools'. 
+    Also retrieve today's date.'''))
