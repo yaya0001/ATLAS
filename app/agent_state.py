@@ -21,5 +21,3 @@ class AgentState(BaseModel):
     ] = "ready"
 
     final_answer: str | None = None
-state = AgentState(status='sleeping') 
-print(state.model_dump_json())
