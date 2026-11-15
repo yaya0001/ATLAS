@@ -81,4 +81,4 @@ available_tools = [
 agent1=Agent(GroqLLM(), ToolCallHandler(tool_executor), available_tools, max_iterations=5)
 print(agent1.run('''Use count_words and get_current_date together. 
     Count the words in: 'Agentic AI systems can use external tools'. 
-    Also retrieve today's date.'''))
+    Also retrieve today's date then answer the question: what is the most recent Agents research paper?'''))

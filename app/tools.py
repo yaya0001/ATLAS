@@ -1,9 +1,12 @@
 from datetime import datetime, timezone
 from typing import Any, Callable, get_type_hints
 from inspect import signature, Parameter
-
 from pydantic import BaseModel, ConfigDict, create_model
+import os
+import json
+from tavily import TavilyClient
 
+from app.core.config import settings
 
 # -------------------------
 # Tool Functions
@@ -18,7 +21,45 @@ def count_words(text: str) -> int:
     """Count the number of words in a given text."""
     return len(text.split())
 
+def web_search(query: str, max_results: int = 5) -> str:
+    """
+    Search the web for information related to a query.
+    Returns relevant results with titles, URLs, and content snippets.
+    """
 
+    api_key = settings.Tavily_API_KEY
+
+    if not api_key:
+        raise RuntimeError("ATLAS_TAVILY_API_KEY is not configured.")
+
+    if not 1 <= max_results <= 10:
+        raise ValueError("max_results must be between 1 and 10.")
+
+    client = TavilyClient(api_key=api_key)
+
+    response = client.search(
+        query=query,
+        search_depth="basic",
+        topic="general",
+        max_results=max_results,
+    )
+
+    results = []
+
+    for item in response.get("results", []):
+
+        results.append({
+            "title": item.get("title"),
+            "url": item.get("url"),
+            "content": item.get("content"),
+            "score": item.get("score"),
+        })
+
+    return json.dumps(
+        results,
+        ensure_ascii=False,
+        indent=2,
+    )
 # -------------------------
 # Tool Registry
 # -------------------------
@@ -190,7 +231,7 @@ tool_schema_generator = ToolSchemaGenerator(validator=tool_validator)
 
 tool_registry.register(get_current_date)
 tool_registry.register(count_words)
-
+tool_registry.register(web_search)
 tool_executor = ToolExecutor(
     registry=tool_registry,
     validator=tool_validator,
