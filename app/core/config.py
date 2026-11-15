@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     GROQ_API_KEY: str = "YOUR_API_KEY"
     model_temperature: float = 0.7
     model_max_tokens: int = 1000
+    Tavily_API_KEY: str = "YOUR_TAVILY_API_KEY"
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
