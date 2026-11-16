@@ -1,7 +1,8 @@
 from app.agent_state import AgentState
 from app.llm import GroqLLM
 from app.tool_handler import ToolCallHandler
-from app.tools import tool_registry, tool_schema_generator , tool_executor
+from app.tools import tool_executor, tool_registry, tool_schema_generator
+
 
 class Agent:
 
@@ -74,11 +75,24 @@ class Agent:
 
         return state
 
-available_tools = [
-    tool_schema_generator.generate(function)
-    for function in tool_registry.get_all_tools()
-]
-agent1=Agent(GroqLLM(), ToolCallHandler(tool_executor), available_tools, max_iterations=5)
-print(agent1.run('''Use count_words and get_current_date together. 
-    Count the words in: 'Agentic AI systems can use external tools'. 
-    Also retrieve today's date then answer the question: what is the most recent Agents research paper?'''))
+def create_agent() -> Agent:
+    available_tools = [
+        tool_schema_generator.generate(function)
+        for function in tool_registry.get_all_tools()
+    ]
+    return Agent(
+        GroqLLM(),
+        ToolCallHandler(tool_executor),
+        available_tools,
+        max_iterations=5,
+    )
+
+
+if __name__ == "__main__":
+    agent = create_agent()
+    print(agent.run(
+        """Use count_words and get_current_date together.
+        Count the words in: 'Agentic AI systems can use external tools'.
+        Also retrieve today's date then answer: what is the most recent Agents
+        research paper?"""
+    ))
